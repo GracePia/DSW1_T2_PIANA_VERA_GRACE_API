@@ -15,6 +15,7 @@ namespace Library.Application.Mappings
                 .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
 
             CreateMap<CreateLoanDto, Loan>();
+             
         }
     }
 }

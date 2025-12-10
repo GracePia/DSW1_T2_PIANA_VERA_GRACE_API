@@ -16,6 +16,6 @@ namespace Library.Domain.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public Book? Book { get; set; } 
+        public Book Book { get; set; } = null!;
     }
 }
