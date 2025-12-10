@@ -4,6 +4,6 @@ namespace Library.Domain.Ports.Out
 {
     public interface ILoanRepository : IRepository<Loan>
     {
-        Task<IEnumerable<Loan>> GetActiveLoansAsync();
+        Task<IEnumerable<Loan>> GetActiveLoansAsync();   
     }
 }
