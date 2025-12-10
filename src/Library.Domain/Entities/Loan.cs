@@ -2,8 +2,6 @@ namespace Library.Domain.Entities
 {
     public class Loan
     {
-        private Book? book;
-
         public int Id { get; set; }
 
         public int BookId { get; set; }
@@ -18,6 +16,6 @@ namespace Library.Domain.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public Book? Book { get => book; set => book = value; }
+        public Book? Book { get; set; } 
     }
 }
