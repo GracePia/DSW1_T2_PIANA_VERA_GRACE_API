@@ -1,6 +1,7 @@
 using Library.Domain.Ports.Out;
+using Library.Infrastructure.Persistence.Context;
 
-namespace Library.Infrastructure.Persistence
+namespace Library.Infrastructure.Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -9,18 +10,24 @@ namespace Library.Infrastructure.Persistence
         public IBookRepository Books { get; }
         public ILoanRepository Loans { get; }
 
-        public UnitOfWork(ApplicationDbContext context,
-            IBookRepository bookRepository,
-            ILoanRepository loanRepository)
+        public UnitOfWork(
+            ApplicationDbContext context,
+            IBookRepository books,
+            ILoanRepository loans)
         {
             _context = context;
-            Books = bookRepository;
-            Loans = loanRepository;
+            Books = books;
+            Loans = loans;
         }
 
-        public async Task<int> SaveChangesAsync()
+        public Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

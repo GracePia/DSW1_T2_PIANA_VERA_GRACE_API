@@ -1,8 +1,9 @@
 using Library.Domain.Ports.Out;
+using Library.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Library.Infrastructure.Persistence
+namespace Library.Infrastructure.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -40,7 +41,7 @@ namespace Library.Infrastructure.Persistence
             _dbSet.Update(entity);
         }
 
-        public void Remove(T entity)
+        public void Delete(T entity)
         {
             _dbSet.Remove(entity);
         }
