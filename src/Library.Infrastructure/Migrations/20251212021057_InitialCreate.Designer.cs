@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251212004642_InitialCreate")]
+    [Migration("20251212021057_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -70,9 +70,6 @@ namespace Library.Infrastructure.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BookId1")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -94,26 +91,23 @@ namespace Library.Infrastructure.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.HasIndex("BookId1");
-
                     b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("Library.Domain.Entities.Loan", b =>
                 {
-                    b.HasOne("Library.Domain.Entities.Book", null)
-                        .WithMany()
+                    b.HasOne("Library.Domain.Entities.Book", "Book")
+                        .WithMany("Loans")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Library.Domain.Entities.Book", "Book")
-                        .WithMany()
-                        .HasForeignKey("BookId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("Library.Domain.Entities.Book", b =>
+                {
+                    b.Navigation("Loans");
                 });
 #pragma warning restore 612, 618
         }

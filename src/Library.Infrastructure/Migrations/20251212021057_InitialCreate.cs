@@ -49,8 +49,7 @@ namespace Library.Infrastructure.Migrations
                     ReturnDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Status = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    BookId1 = table.Column<int>(type: "int", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,12 +57,6 @@ namespace Library.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Loans_Books_BookId",
                         column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Loans_Books_BookId1",
-                        column: x => x.BookId1,
                         principalTable: "Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -80,11 +73,6 @@ namespace Library.Infrastructure.Migrations
                 name: "IX_Loans_BookId",
                 table: "Loans",
                 column: "BookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Loans_BookId1",
-                table: "Loans",
-                column: "BookId1");
         }
 
         /// <inheritdoc />

@@ -4,30 +4,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.API.Controllers
 {
-   [ApiController]
-[Route("api/[controller]")]
-public class BooksController : ControllerBase
-{
-    private readonly IBookService _bookService;
-
-    public BooksController(IBookService bookService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class BooksController : ControllerBase
     {
-        _bookService = bookService;
-    }
+        private readonly IBookService _bookService;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var books = await _bookService.GetAllAsync();
-        return Ok(books);
-    }
+        public BooksController(IBookService bookService)
+        {
+            _bookService = bookService;
+        }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateBookDto dto)
-    {
-        var book = await _bookService.CreateAsync(dto);
-        return Ok(book);
-    }
-}
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var books = await _bookService.GetAllAsync();
+            return Ok(books);
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateBookDto dto)
+        {
+            var book = await _bookService.CreateAsync(dto);
+            return Ok(book);
+        }
+    }
 }

@@ -6,27 +6,26 @@ namespace Library.Infrastructure.Persistence.Context
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Loan> Loans { get; set; }
+        public DbSet<Book> Books { get; set; } = null!;
+        public DbSet<Loan> Loans { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // ISBN único
+            // Clave única ISBN
             modelBuilder.Entity<Book>()
                 .HasIndex(b => b.ISBN)
                 .IsUnique();
 
-            // Relación Book → Loans (1:N)
+            // Relación Book - Loan
             modelBuilder.Entity<Loan>()
-                .HasOne<Book>()
-                .WithMany()
-                .HasForeignKey(l => l.BookId);
+                .HasOne(l => l.Book)
+                .WithMany(b => b.Loans)
+                .HasForeignKey(l => l.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

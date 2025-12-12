@@ -2,9 +2,7 @@ using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Library.API.Controllers
-{
-    [ApiController]
+[ApiController]
 [Route("api/[controller]")]
 public class LoansController : ControllerBase
 {
@@ -22,19 +20,26 @@ public class LoansController : ControllerBase
         return Ok(loans);
     }
 
+    [HttpGet("active")]
+    public async Task<IActionResult> GetActive()
+    {
+        var loans = await _loanService.GetActiveLoansAsync();
+        return Ok(loans);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateLoanDto dto)
     {
-        var result = await _loanService.CreateLoanAsync(dto);
-        return Ok(result);
+        var loan = await _loanService.CreateLoanAsync(dto);
+        return Ok(loan);
     }
 
     [HttpPut("{id}/return")]
     public async Task<IActionResult> Return(int id)
     {
-        var result = await _loanService.ReturnLoanAsync(id);
-        return Ok(result);
+        var loan = await _loanService.ReturnLoanAsync(id);
+        return Ok(loan);
     }
 }
 
-}
+

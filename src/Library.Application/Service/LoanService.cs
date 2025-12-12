@@ -1,4 +1,3 @@
-
 using AutoMapper;
 using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
@@ -6,7 +5,7 @@ using Library.Domain.Entities;
 using Library.Domain.Exceptions;
 using Library.Domain.Ports.Out;
 
-namespace Library.Application.Services
+namespace Library.Application.Service
 {
     public class LoanService : ILoanService
     {
@@ -22,11 +21,8 @@ namespace Library.Application.Services
         public async Task<LoanDto> CreateLoanAsync(CreateLoanDto dto)
         {
             var book = await _uow.Books.GetByIdAsync(dto.BookId);
-            if (book == null)
-                throw new NotFoundException($"Libro con Id {dto.BookId} no existe.");
-
-            if (book.Stock <= 0)
-                throw new BusinessException("El libro no tiene stock disponible.");
+            if (book == null) throw new NotFoundException("Libro no existe.");
+            if (book.Stock <= 0) throw new BusinessException("Libro sin stock.");
 
             book.Stock--;
 
@@ -36,10 +32,12 @@ namespace Library.Application.Services
                 StudentName = dto.StudentName,
                 LoanDate = DateTime.Now,
                 Status = "Active",
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                Book = book // ⚠️ muy importante para AutoMapper
             };
 
             await _uow.Loans.AddAsync(loan);
+            _uow.Books.Update(book);
             await _uow.SaveChangesAsync();
 
             return _mapper.Map<LoanDto>(loan);
@@ -60,11 +58,8 @@ namespace Library.Application.Services
         public async Task<LoanDto> ReturnLoanAsync(int loanId)
         {
             var loan = await _uow.Loans.GetByIdAsync(loanId);
-            if (loan == null)
-                throw new NotFoundException("El préstamo no existe.");
-
-            if (loan.Status == "Returned")
-                throw new BusinessException("El préstamo ya fue devuelto.");
+            if (loan == null) throw new NotFoundException("Préstamo no existe.");
+            if (loan.Status == "Returned") throw new BusinessException("Préstamo ya devuelto.");
 
             loan.Status = "Returned";
             loan.ReturnDate = DateTime.Now;
@@ -74,7 +69,6 @@ namespace Library.Application.Services
 
             _uow.Loans.Update(loan);
             _uow.Books.Update(book);
-
             await _uow.SaveChangesAsync();
 
             return _mapper.Map<LoanDto>(loan);

@@ -5,8 +5,9 @@ namespace Library.Application.Interfaces.Services
     public interface ILoanService
     {
         Task<LoanDto> CreateLoanAsync(CreateLoanDto dto);
+        Task<IEnumerable<LoanDto>> GetAllAsync();
         Task<IEnumerable<LoanDto>> GetActiveLoansAsync();
-        Task<IEnumerable<LoanDto>> GetAllAsync();   // ✅ CORREGIDO
+        
         Task<LoanDto> ReturnLoanAsync(int loanId);
     }
 }

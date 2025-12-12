@@ -10,24 +10,14 @@ namespace Library.Infrastructure.Persistence.Repositories
         public IBookRepository Books { get; }
         public ILoanRepository Loans { get; }
 
-        public UnitOfWork(
-            ApplicationDbContext context,
-            IBookRepository books,
-            ILoanRepository loans)
+        public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
-            Books = books;
-            Loans = loans;
+            Books = new BookRepository(_context);
+            Loans = new LoanRepository(_context);
         }
 
-        public Task<int> SaveChangesAsync()
-        {
-            return _context.SaveChangesAsync();
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+        public Task<int> SaveChangesAsync() => _context.SaveChangesAsync();
+        public void Dispose() => _context.Dispose();
     }
 }
