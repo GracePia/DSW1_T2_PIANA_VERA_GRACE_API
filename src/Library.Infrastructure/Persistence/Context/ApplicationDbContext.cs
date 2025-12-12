@@ -15,7 +15,18 @@ namespace Library.Infrastructure.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            base.OnModelCreating(modelBuilder);
+
+            // ISBN único
+            modelBuilder.Entity<Book>()
+                .HasIndex(b => b.ISBN)
+                .IsUnique();
+
+            // Relación Book → Loans (1:N)
+            modelBuilder.Entity<Loan>()
+                .HasOne<Book>()
+                .WithMany()
+                .HasForeignKey(l => l.BookId);
         }
     }
 }

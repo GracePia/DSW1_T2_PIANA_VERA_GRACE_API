@@ -1,4 +1,4 @@
-using System.ComponentModel;
+
 using AutoMapper;
 using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
@@ -43,6 +43,12 @@ namespace Library.Application.Services
             await _uow.SaveChangesAsync();
 
             return _mapper.Map<LoanDto>(loan);
+        }
+
+        public async Task<IEnumerable<LoanDto>> GetAllAsync()
+        {
+            var loans = await _uow.Loans.GetAllAsync();
+            return _mapper.Map<IEnumerable<LoanDto>>(loans);
         }
 
         public async Task<IEnumerable<LoanDto>> GetActiveLoansAsync()
