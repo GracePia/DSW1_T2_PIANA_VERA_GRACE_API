@@ -24,12 +24,12 @@ namespace Library.Infrastructure.Persistence.Repositories
             _context.Loans.Update(entity);
         }
 
-        public void Delete(Loan entity)  // ⚠️ Implementar Delete
+        public void Delete(Loan entity) 
         {
             _context.Loans.Remove(entity);
         }
 
-        public async Task<Loan?> GetByIdAsync(int id)  // ⚠️ Ajuste de nulabilidad
+        public async Task<Loan?> GetByIdAsync(int id) 
         {
             return await _context.Loans
                                  .Include(l => l.Book)
@@ -50,5 +50,6 @@ namespace Library.Infrastructure.Persistence.Repositories
                                  .Where(l => l.Status == "Active")
                                  .ToListAsync();
         }
+       
     }
 }

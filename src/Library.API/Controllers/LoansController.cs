@@ -2,44 +2,60 @@ using Library.Application.DTOs;
 using Library.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("api/[controller]")]
-public class LoansController : ControllerBase
+namespace Library.API.Controllers
 {
-    private readonly ILoanService _loanService;
-
-    public LoansController(ILoanService loanService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class LoansController : ControllerBase
     {
-        _loanService = loanService;
-    }
+        private readonly ILoanService _loanService;
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var loans = await _loanService.GetAllAsync();
-        return Ok(loans);
-    }
+        public LoansController(ILoanService loanService)
+        {
+            _loanService = loanService;
+        }
 
-    [HttpGet("active")]
-    public async Task<IActionResult> GetActive()
-    {
-        var loans = await _loanService.GetActiveLoansAsync();
-        return Ok(loans);
-    }
+        // GET: api/loans
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var loans = await _loanService.GetAllAsync();
+            return Ok(loans);
+        }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateLoanDto dto)
-    {
-        var loan = await _loanService.CreateLoanAsync(dto);
-        return Ok(loan);
-    }
+        // GET: api/loans/active
+        [HttpGet("active")]
+        public async Task<IActionResult> GetActive()
+        {
+            var loans = await _loanService.GetActiveLoansAsync();
+            return Ok(loans);
+        }
 
-    [HttpPut("{id}/return")]
-    public async Task<IActionResult> Return(int id)
-    {
-        var loan = await _loanService.ReturnLoanAsync(id);
-        return Ok(loan);
+        // POST: api/loans
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateLoanDto dto)
+        {
+            var loan = await _loanService.CreateLoanAsync(dto);
+            return Ok(loan);
+        }
+
+        // PUT: api/loans/return/{id}
+        [HttpPut("return/{id}")]
+        public async Task<IActionResult> ReturnLoan(int id)
+        {
+            var loan = await _loanService.ReturnLoanAsync(id);
+            return Ok(loan);
+        }
+
+        // DELETE: api/loans/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _loanService.DeleteAsync(id);
+            if (!deleted)
+                return NotFound(new { message = "Préstamo no encontrado" });
+
+            return NoContent();
+        }
     }
 }
-
-

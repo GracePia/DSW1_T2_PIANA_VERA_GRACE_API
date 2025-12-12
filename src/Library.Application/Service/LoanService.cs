@@ -33,7 +33,7 @@ namespace Library.Application.Service
                 LoanDate = DateTime.Now,
                 Status = "Active",
                 CreatedAt = DateTime.Now,
-                Book = book // ⚠️ muy importante para AutoMapper
+                Book = book
             };
 
             await _uow.Loans.AddAsync(loan);
@@ -72,6 +72,27 @@ namespace Library.Application.Service
             await _uow.SaveChangesAsync();
 
             return _mapper.Map<LoanDto>(loan);
+        }
+
+        public async Task<bool> DeleteAsync(int loanId)
+        {
+            var loan = await _uow.Loans.GetByIdAsync(loanId);
+            if (loan == null) return false;
+
+            // Devolver stock si estaba activo
+            if (loan.Status != "Returned")
+            {
+                var book = await _uow.Books.GetByIdAsync(loan.BookId);
+                if (book != null)
+                {
+                    book.Stock++;
+                    _uow.Books.Update(book);
+                }
+            }
+
+            _uow.Loans.Delete(loan);
+            await _uow.SaveChangesAsync();
+            return true;
         }
     }
 }
