@@ -8,6 +8,6 @@ namespace Library.Application.DTOs
         public string BookTitle { get; set; } = string.Empty;
         public string StudentName { get; set; } = string.Empty;
         public DateTime LoanDate { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public string Status { get; set; } = "Active";
     }
 }
