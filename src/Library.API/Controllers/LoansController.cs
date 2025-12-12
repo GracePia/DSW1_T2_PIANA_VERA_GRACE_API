@@ -35,6 +35,18 @@ namespace Library.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateLoanDto dto)
         {
+            // Validación de Status
+            if (dto.Status != null && dto.Status != "Active" && dto.Status != "Returned")
+            {
+                return BadRequest(new { message = "Status debe ser 'Active' o 'Returned'" });
+            }
+
+            // Si Status es null o vacío, asignamos "Active" por defecto
+            if (string.IsNullOrEmpty(dto.Status))
+            {
+                dto.Status = "Active";
+            }
+
             var loan = await _loanService.CreateLoanAsync(dto);
             return Ok(loan);
         }
@@ -43,8 +55,15 @@ namespace Library.API.Controllers
         [HttpPut("return/{id}")]
         public async Task<IActionResult> ReturnLoan(int id)
         {
-            var loan = await _loanService.ReturnLoanAsync(id);
-            return Ok(loan);
+            try
+            {
+                var loan = await _loanService.ReturnLoanAsync(id);
+                return Ok(loan);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // DELETE: api/loans/{id}

@@ -5,52 +5,51 @@ using Microsoft.AspNetCore.Mvc;
 namespace Library.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class BooksController : ControllerBase
+[Route("api/[controller]")]
+public class BooksController : ControllerBase
+{
+    private readonly IBookService _bookService;
+
+    public BooksController(IBookService bookService)
     {
-        private readonly IBookService _bookService;
+        _bookService = bookService;
+    }
 
-        public BooksController(IBookService bookService)
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var books = await _bookService.GetAllAsync();
+        return Ok(books);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateBookDto dto)
+    {
+        var book = await _bookService.CreateAsync(dto);
+        return Ok(book);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, CreateBookDto dto)
+    {
+        try
         {
-            _bookService = bookService;
+            var updatedBook = await _bookService.UpdateAsync(id, dto);
+            return Ok(updatedBook);
         }
-
-        // GET: api/books
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        catch (KeyNotFoundException ex)
         {
-            var books = await _bookService.GetAllAsync();
-            return Ok(books);
-        }
-
-        // GET: api/books/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var book = await _bookService.GetByIdAsync(id);
-            if (book == null)
-                return NotFound(new { message = "Libro no encontrado" });
-
-            return Ok(book);
-        }
-
-        // POST: api/books
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateBookDto dto)
-        {
-            var book = await _bookService.CreateAsync(dto);
-            return Ok(book);
-        }
-
-        // DELETE: api/books/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var deleted = await _bookService.DeleteAsync(id);
-            if (!deleted)
-                return NotFound(new { message = "Libro no encontrado" });
-
-            return NoContent(); // 204
+            return NotFound(ex.Message);
         }
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _bookService.DeleteAsync(id);
+        if (!result) return NotFound("Book not found");
+        return NoContent();
+    }
+}
+
 }

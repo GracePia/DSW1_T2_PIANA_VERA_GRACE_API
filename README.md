@@ -4,82 +4,45 @@ Proyecto del Examen – Arquitectura Hexagonal
 **Curso:** Desarrollo de Servicios Web I  
 
 ---
-## Overview
 
-This API allows managing books (CRUD) and loans, including stock validation, loan returns, and transactional operations like book liquidation.  
-It separates concerns into **Domain**, **Application**, and **Infrastructure** layers.
+## Arquitectura  
+El proyecto sigue la Arquitectura Hexagonal (Ports & Adapters), dividido en:
+
+- **Library.Domain**
+  - Entidades: Book, Loan
+  - Excepciones de Dominio
+  - Interfaces (Ports OUT): Repositorios + UnitOfWork
+
+- **Library.Application**
+  - DTOs
+  - Interfaces de Servicios (Ports IN)
+  - Servicios: BookService, LoanService
+  - AutoMapper (MappingProfile)
+
+- **Library.Infrastructure**
+  - ApplicationDbContext (EF Core)
+  - Repositorios (Repository, BookRepository, LoanRepository)
+  - UnitOfWork
+  - Dependency Injection
+
+- **Library.API**
+  - Controladores (BooksController, LoansController)
+  - Configuración general  
+  - Manejo de excepciones global
 
 ---
 
-## Architecture
-
-- **Domain**: Contains entities, exceptions, and repository interfaces.  
-- **Application**: Contains application services, DTOs, and interfaces.  
-- **Infrastructure**: Contains repository implementations and database access.  
-- **API**: ASP.NET Core Web API exposing endpoints for books and loans, with Swagger documentation.
-
----
-
-## Tech Stack
-
+## Requisitos  
 - .NET 8  
-- ASP.NET Core Web API  
-- Entity Framework Core (Infrastructure layer)  
-- Swagger/OpenAPI for API documentation  
-- AutoMapper for mapping DTOs  
-- Clean Architecture pattern
+- SQL Server  
+- EF Core 8  
+- AutoMapper  
+- Swashbuckle (Swagger)
 
 ---
 
-## Getting Started
+## Cómo ejecutar el proyecto
 
-### Prerequisites
-
-- .NET 8 SDK  
-- Visual Studio 2022 or VS Code  
-- SQL Server / LocalDB
-
-### Installation
-
-Clone the repository:
-
+### Restaurar paquetes
 ```bash
-git clone <repository-url>
-cd DSW1_T2_PIANA_VERA_GRACE
-Restore dependencies:
-
-bash
-Copiar código
 dotnet restore
-Run the API:
-
-bash
-Copiar código
-cd src/Library.API
-dotnet run
-API is available at: https://localhost:5210
-
-Swagger UI: http://localhost:5210/swagger/index.html
-
-API Endpoints
-Books
-
-GET /api/books → List all books
-
-GET /api/books/{id} → Get book by ID
-
-POST /api/books → Create a new book
-
-DELETE /api/books/{id} → Delete a book
-
-Loans
-
-GET /api/loans → List all loans
-
-GET /api/loans/active → List active loans
-
-POST /api/loans → Create a new loan
-
-PUT /api/loans/return/{id} → Return a loan
-
-DELETE /api/loans/{id} → Delete a loan

@@ -12,4 +12,5 @@ namespace Library.Domain.Entities
 
         public Book Book { get; set; } = null!;
     }
+
 }
